@@ -1,6 +1,9 @@
 name: release-runners
 
 on:
+  push:
+    tags:
+      - '*'
   repository_dispatch:
     types: [release-runners]
   workflow_dispatch:
@@ -15,7 +18,8 @@ permissions:
   packages: write # needed for ghcr access
 
 env:
-  VERSION: ${{ github.event.inputs.version }}
+  # VERSION: ${{ github.event.inputs.version }}
+  VERSION: 0.0.1
 
 jobs:
   release-tofu:
