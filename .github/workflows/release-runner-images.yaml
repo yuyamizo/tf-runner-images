@@ -24,7 +24,7 @@ jobs:
       INFRA_EXEC_NAME: tofu
     strategy:
       matrix:
-        tofu_version: [1.6.0-alpha1, 1.6.0-alpha2, 1.6.0-alpha3, 1.6.0-alpha4, 1.6.0-alpha5] 
+        tofu_version: [1.6.0-alpha1, 1.6.0-alpha2, 1.6.0-alpha3, 1.6.0-alpha4, 1.6.0-alpha5, v1.6.0-rc1] 
         runner: [base, aws]
     steps:
       - name: Check out
