@@ -2,8 +2,7 @@ name: release-runners
 
 on:
   push:
-    tags:
-      - '*'
+
   repository_dispatch:
     types: [release-runners]
   workflow_dispatch:
@@ -30,7 +29,8 @@ jobs:
       matrix:
         # tofu_version: [1.6.0-alpha1, 1.6.0-alpha2, 1.6.0-alpha3, 1.6.0-alpha4, 1.6.0-alpha5, v1.6.0-rc1] 
         tofu_version: [1.6.0-rc1] 
-        runner: [base, aws]
+        runner: [base]
+        # runner: [base, aws]
     steps:
       - name: Check out
         uses: actions/checkout@v4
@@ -43,12 +43,18 @@ jobs:
         uses: docker/setup-buildx-action@v3
         with:
           buildkitd-flags: "--debug"
-      - name: Login to Docker Registry
-        uses: docker/login-action@v1
+      - name: Login to GAR
+        uses: docker/login-action@v3
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: asia-northeast1-docker.pkg.dev
+          username: _json_key
+          password: $HELM_ARTIFACT_REGISTRY_KEY
+      # - name: Login to Docker Registry
+      #   uses: docker/login-action@v1
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish multi-arch tofu-${{ matrix.runner }} images
         uses: docker/build-push-action@v5
         with:
@@ -64,7 +70,7 @@ jobs:
             INFRA_EXEC_NAME=${{ env.INFRA_EXEC_NAME }}
             INFRA_EXEC_URL_PREFIX=https://github.com/opentofu/opentofu/releases/download/v
           tags: |
-            ghcr.io/tf-controller/${{ env.INFRA_EXEC_NAME }}-runner:${{ env.VERSION }}-${{ matrix.runner }}-tofu-${{ matrix.tofu_version }}
+            asia-northeast1-docker.pkg.dev/msp-project-gcp/msp-docker-registry/tf-controller/${{ env.INFRA_EXEC_NAME }}-runner:${{ env.VERSION }}-${{ matrix.runner }}-tofu-${{ matrix.tofu_version }}
           labels: |
             org.opencontainers.image.title=${{ github.event.repository.name }}
             org.opencontainers.image.description=${{ github.event.repository.description }}
