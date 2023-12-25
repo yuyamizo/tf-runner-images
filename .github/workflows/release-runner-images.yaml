@@ -19,7 +19,7 @@ permissions:
 
 env:
   # VERSION: ${{ github.event.inputs.version }}
-  VERSION: v0.16.0-rc.3
+  VERSION: 0.16.0-rc.3
 
 jobs:
   release-tofu:
